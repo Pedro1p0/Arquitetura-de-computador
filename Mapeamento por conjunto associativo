@@ -1,0 +1,101 @@
+a = list()
+b = list()
+cache1 = dict()
+cache2 = dict()
+cont_acerto = 0
+cont_erro = 0 
+
+
+#CRIAÇÃO DA MEMORIA CACHE 
+
+for i in range(128):
+    cache1['tag'] = int(-1)
+    cache1['validade'] = False
+    cache1['reposicao'] = True
+    cache1['via'] = 0  
+    a.append(cache1.copy())
+
+
+for i in range(128):
+    cache2['tag'] = int(-1)
+    cache2['validade'] = False
+    cache2['reposicao'] = True
+    cache2['via'] = 1  
+    b.append(cache2.copy())
+
+
+
+def verifica(a,b,conj,tag):
+       
+    conj_deci = (int(conj,2))
+    if (a[conj_deci]['validade'] == True and b[conj_deci]['validade'] == True):
+        if(a[conj_deci]['tag'] == tag):
+            
+            return True
+        elif(b[conj_deci]['tag'] == tag):
+            
+            return True
+        elif(a[conj_deci]['reposicao'] == True):
+            a[conj_deci]['tag'] = tag 
+            a[conj_deci]['reposicao'] = False
+            b[conj_deci]['reposicao'] = True
+            return False
+               
+        elif b[conj_deci]['reposicao'] == True:
+            b[conj_deci]['tag'] = tag
+            b[conj_deci]['reposicao'] = False
+            a[conj_deci]['reposicao'] = True
+            return False
+            
+    else:
+        if a[conj_deci]['validade'] == True:
+            if a[conj_deci]['tag'] == tag:
+                return True
+            else:
+                b[conj_deci]['tag'] = tag
+                b[conj_deci]['validade'] = True
+                b[conj_deci]['reposicao'] = False 
+                a[conj_deci]['reposicao'] = True
+                return False
+        elif (b[conj_deci]['validade'] == True):
+            if (b[conj_deci]['tag'] == tag):
+                return True
+            else:
+                a[conj_deci]['tag'] = tag 
+                a[conj_deci]['validade'] = True
+                a[conj_deci]['reposicao'] = False
+                b[conj_deci]['reposicao'] = True 
+                return False
+        else:
+            a[conj_deci]['tag'] = tag 
+            a[conj_deci]['validade'] = True
+            a[conj_deci]['reposicao'] = False
+            b[conj_deci]['reposicao'] = True 
+            return False
+
+        
+
+
+def bit(endereco,a,b,cont_acerto,cont_erro):
+    
+    bits = format(int(endereco),"b").zfill(13)
+    tag = bits[0:4]
+    conj = bits[4:11]
+    acerto = verifica(a,b,conj,tag)
+    if acerto == True:
+        cont_acerto += 1 
+    else:
+        cont_erro +=1 
+    return cont_acerto, cont_erro
+
+
+
+arquivo = open('enderecos.dat','r')
+doc = arquivo.readlines()
+
+
+for x in doc:
+    cont_erro,cont_acerto = bit(x,a,b,cont_acerto,cont_erro)   
+
+print(cont_erro)
+print(cont_acerto)
