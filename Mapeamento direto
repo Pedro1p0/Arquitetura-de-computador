@@ -1,0 +1,74 @@
+
+# DECLARAÇÃO DE VARIAVEIS 
+# Vetor que receberá o dicionario        
+a = list()
+# Dicionario que conterá a estrutura da cache
+cache = dict()
+# Contador de acerto 
+Hit = 0
+# Contador de erro
+Miss = 0 
+
+
+#CRIAÇÃO DA ESTRUTURA DO DICIONARIO   
+
+for i in range(256):
+    cache['tag'] = int(-1)
+    cache['validade'] = False
+    cache['endereço'] = format(int(i),"b").zfill(8)
+    a.append(cache.copy())
+
+# FUNÇÃO QUE VERIFICA A POSIÇÃO DA MEMORIA CACHE
+# ELA RETORNA SE O HIT FOI VERDADE OU FALSO SE FOI MISS 
+ 
+def cache_check(a,linha,tag):
+
+        linha_inteiro=int(linha,2)
+        if (a[linha_inteiro]['endereço'] == linha):
+            if(a[linha_inteiro]['validade'] == True): 
+                if(a[linha_inteiro]['tag'] == tag):                            
+                    return True 
+                else:
+                    a[linha_inteiro]['tag']= tag
+                    return False
+            else:
+                a[linha_inteiro]['tag'] = tag
+                a[linha_inteiro]['validade'] = True
+                return False
+                 
+        
+        
+        
+    
+# A função bit transforma o inteiro do arquivo em informações binarias uteis sobre o endereço de memória
+# como a tag e a linha, além disso ela chama a função verifica e de acordo com o retorno dela conta o erro ou o acerto
+# retornando justamente esses parâmetros
+
+def conv(endereco,a,cont_acerto,cont_erro):
+    bits = format(int(endereco),"b").zfill(13)
+    tag = bits[0:3]
+    linha = bits[3:11]
+    
+    acerto = cache_check(a,linha,tag)
+    if (acerto == True):
+        cont_acerto += 1
+    else:
+        cont_erro += 1
+    
+   
+    return cont_erro,cont_acerto
+
+# O arquivo é aberto e é chamada a função readlines para ler linha por linha
+
+arquivo = open('enderecos.dat','r')
+doc = arquivo.readlines()
+
+# Um for percorre as linhas do arquivo chamando a função bit para cada endereço contido nele 
+
+for x in doc:
+    Miss,Hit = conv(x,a,Hit,Miss)   
+
+# Depois de percorrer todas as linhas do arquivo, e chamar a função bit para cada 
+# Temos o total de acertos e erros da memória 
+print(Miss)
+print(Hit)
