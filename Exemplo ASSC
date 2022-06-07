@@ -1,0 +1,75 @@
+.text 
+main:
+	# S0 = S1+S2 - s3+S4
+	#addi $s1,$zero,10
+	#addi $s2,$zero,20
+	#addi $s3,$zero,15
+	#addi $s4,$zero,5 
+	
+	addi $v0,$zero,4
+	la $a0 ,msg1
+	syscall
+	
+	addi $v0,$zero,4
+	la $a0 ,msg2
+	syscall
+	
+	addi $v0, $zero, 5 
+	syscall 
+	add $s1 , $zero, $v0
+	
+	addi $v0,$zero,4
+	la $a0 ,msg3
+	syscall
+	
+	
+	addi $v0, $zero, 5 
+	syscall 
+	add $s2 , $zero, $v0
+	
+	addi $v0,$zero,4
+	la $a0 ,msg4
+	syscall
+	
+	addi $v0, $zero, 5 
+	syscall 
+	add $s3 , $zero, $v0
+	
+	addi $v0,$zero,4
+	la $a0 ,msg5
+	syscall
+	
+	addi $v0, $zero, 5 
+	syscall 
+	add $s4 , $zero, $v0
+	
+	
+	
+	
+	add $t0,$s1,$s2
+	add $t1,$s3,$s4
+	sub $s0, $t0, $t1
+	
+	addi $v0,$zero,4
+	la $a0 ,msg6
+	syscall
+	
+	addi $v0,$zero,1
+	add $a0,$zero,$s0
+	syscall
+	
+	
+	addi $v0,$zero,10
+	syscall
+	
+	
+	
+	 
+	
+	.data
+	msg1: .asciiz "\n f = (g + h) - (i + j) \n"
+	msg2: .asciiz "Digite g:  "
+	msg3: .asciiz "Digite h:  "
+	msg4: .asciiz "Digite i:  " 
+	msg5: .asciiz "Digite j:  "
+	msg6: .asciiz "f = "
