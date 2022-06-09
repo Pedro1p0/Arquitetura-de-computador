@@ -1,0 +1,70 @@
+.text
+main:
+addi $v0, $zero, 4
+la $a0, msg
+syscall 	
+
+la $s0, A
+la $s1, B
+la $s2, C
+la $s3, D
+
+addi $v0, $zero, 5
+syscall
+sw $v0, 0($s1)
+
+addi $v0, $zero, 5
+syscall 
+sw $v0, 4($s1)
+
+addi $v0, $zero, 5
+syscall 
+sw $v0, 8($s1)
+
+addi $v0, $zero, 5
+syscall 
+sw $v0, 12($s1)
+
+addi $v0, $zero, 5
+syscall 
+sw $v0, 16($s1)
+
+add $t0, $zero, $zero # t0 = 0 
+addi $t1, $zero, 5 # t1 = 5
+
+ 
+for: 	sll $t3, $t0, 2 # t3 = 4 * $t0
+	add $t3, $t3, $s0 # t3 = $s0 + $t3 
+	lw $t4, 0($t3)   # t4 <- memoria[$t3]
+	sll $t3, $t0,2	   #t3 = 4 * t0
+	add $t3, $t3, $s1   # $t3 = $t3 + $s1
+	lw $t5, 0($t3) 
+	
+	and $t6, $t4, $t5  # A[i] and B[i]
+	or $t6, $t4, $t5    # A[i] and B[i]
+	
+	###########
+	sll $t3, $t0, 2 # t3 = 4 * $t0
+	add $t3, $t3, $s2 # t3 = $s0 + $t3
+	sw $t6, 0($t3) 
+	
+	sll $t3, $t0, 2 # t3 = 4 * $t0
+	add $t3, $t3, $s3 # t3 = $s0 + $t3
+	sw $t7, 0($t3) 
+	##########
+	
+	addi $t0, $t0, 1   # $t0 ++
+	
+	beq $t0, $t1, fimFor   # se t0 == t1 Fim do laço 
+	j for      #vai pro laço for 
+
+fimFor: 
+addi, $v0, $zero, 10
+syscall
+.data
+	.align 2
+	A: .word 1, 2, 3, 4, 5
+	B: .space 20
+	C: .space 20
+	D: .space 20 
+	msg: .asciiz " digite 5 valore: \n"
